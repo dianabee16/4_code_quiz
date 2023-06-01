@@ -1,0 +1,76 @@
+.content {
+    text-align: center;
+    padding: 30px;
+    margin: 60px;
+    font-family: sans-serif;
+}
+
+#startButton {
+    background-color: rgb(71, 8, 117);
+    color: white;
+    display: grid;
+    margin: auto;
+    margin-top: 100px;
+    font-family: sans-serif;
+    font-size: x-large;
+}
+.questions {
+    text-align: center;
+    padding: 30px;
+    margin: 60px;
+    font-family: sans-serif;
+}
+.options {
+    font-family: sans-serif;
+    
+
+
+}
+#highScore {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-family: sans-serif;
+}
+#timer {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-family: sans-serif;
+
+}
+.hide{
+    display: none;
+}
+
+#result {
+
+}
+
+#score-input {
+
+}
+
+#initials {
+
+}
+
+#score-list {
+
+}
+
+#submit {
+
+}
+
+#goBack {
+    background-color: rgb(71, 8, 117);
+    color: white;
+
+}
+
+#clearHighscores {
+    background-color: rgb(71, 8, 117);
+    color: white;
+
+}
