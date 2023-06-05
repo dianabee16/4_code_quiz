@@ -7,6 +7,8 @@ var resultEl = document.getElementById("result");
 var scoreInputEl = document.getElementById("score-input");
 var initialsInput = document.getElementById("initials");
 var scoreListEl = document.getElementById("score-list");
+var correctEl = document.getElementById("correct");
+var finalScoreEl = document.getElementById("score");
 
 // Buttons
 var startButton = document.getElementById("startButton");
@@ -56,7 +58,14 @@ function startTimer() {
         timeLeft--;
         timerEl.textContent = "Time left: " + timeLeft + " s"
 
+        if (currentIndex >= questions.length) {
+            clearInterval(timerInterval)
+            gameOver()
+        }
+
         if (timeLeft <= 0){
+            timeLeft = 0;
+            timerEl.textContent = "Time left: " + timeLeft + " s"
             clearInterval(timerInterval);
             timeLeft.textContent = "Time is up!";
             gameOver();
@@ -81,9 +90,12 @@ document.addEventListener("click", function(event){
     if (event.target.classList.contains("answerButton")){
         questions[currentIndex].clickedAnswer = event.target.textContent
         if (questions[currentIndex].clickedAnswer == questions[currentIndex].answer){
-            finalScore ++
-            
+            finalScore +=25
+            correctEl.textContent = "Correct!"
+            finalScoreEl.textContent = finalScore
+
         } else {
+            correctEl.textContent = "Incorrect!"
             timeLeft -= 10
             if(timeLeft <= 0){
                 clearInterval(timerInterval)
@@ -112,9 +124,83 @@ function startQuiz() {
     startQuestions(questions[currentIndex]);
 }
 function gameOver(){
-    clearInterval(timerInterval);
+    questionsEl.style.display = "none";
+    optionsEl.style.display = "none";
+    scoreInputEl.style.display = "block";
 }
 
+function save(){
+    var savedFromLocalStorage = JSON.parse(localStorage.getItem("saveFromLocalStorage")) || []
+    var initialsValue = initialsInput.value.trim()
+    var userData = {
+        initialsValue: initialsValue,
+        finalScore: finalScore
+    }
+    savedFromLocalStorage.push(userData)
+    
+        localStorage.setItem("savedFromLocalStorage", JSON.stringify(savedFromLocalStorage));
+        initialsInput.value = "";
+        var notification = document.createElement("p")
+        notification.textContent = "Initials have been saved"
+        scoreInputEl.append(notification)
+        var notificationEnd = setTimeout(function (){
+            notification.classList.add("hide")
+        },1000)
+        clearTimeout(notificationEnd)
+        renderList();
+}
+
+
+submitButton.addEventListener("click", function(event){
+    event.preventDefault()
+    save()
+});
+
+function renderList(){
+    // var inputs = JSON.parse(localStorage.getItem("userData"));
+    console.log("here")
+    var userScores = JSON.parse(localStorage.getItem("savedFromLocalStorage")) || []
+    for (var i = 0; i < userScores.length; i++){
+        var scoreData = document.createElement("li")
+        scoreData.textContent = userScores[i].initialsValue + ":" + userScores[i].finalScore;
+        scoreListEl.append(scoreData) 
+        scoreListEl.classList.remove("hide")
+    }
+
+}
+
+
+// create an event listener for submit button
+// in the function for the submit button create a variable that is an object
+// that object will have 2 properties - 1st is initials and the value of initials will be the value of the input.
+// the 2nd property will be the score and that value will be value of the final Score 
+// save it in local storage (before save it parse out what is in local storage, then add the object created above to the scores list, then save it to local storage)
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function showScores(){
+//     var score = 0;
+//     for (let i = 0; i < questions.length; i++) {
+//         if (userAnswers[i] === questions[i].answer) {
+//             score++;
+//         }
+//     }
+//     resultEl.style.display = "none";
+//     resultEl.textContent = `Your score is:${score}/${questions.length}`;
+
+//     resultEl.style.display = "block;"
+// }
 
 
 
