@@ -1,5 +1,5 @@
+// Variables
 var contentEl = document.querySelector(".content");
-var highscoreNav = document.getElementById("highscore");
 var timerEl = document.getElementById("timer");
 var questionsEl = document.getElementById("questions");
 var optionsEl = document.querySelector(".options");
@@ -9,6 +9,7 @@ var initialsInput = document.getElementById("initials");
 var scoreListEl = document.getElementById("score-list");
 var correctEl = document.getElementById("correct");
 var finalScoreEl = document.getElementById("score");
+var endScreen = document.querySelector(".end-screen");
 
 // Buttons
 var startButton = document.getElementById("startButton");
@@ -19,12 +20,11 @@ var clearHighscoresButton = document.getElementById("clearHighscores");
 // Score and timer variables
 var finalScore = 0;
 var timeLeft = 60;
-var questionCount = 25;      // ???
 var timerInterval = "";
 var currentIndex = 0;
 
 
-// List of questions and options, including the correct answer. 
+// List of questions and options (answers) for the quiz, including the correct answer 
 const questions = [
     {
         question: "Which of the following methods can be used to display data in some form using Javascript?",
@@ -72,6 +72,8 @@ function startTimer() {
         } 
     },1000)
 }
+
+// Function to show the questions and the answers to be selected by the user
 function startQuestions(questions){
     currentQuestion = `
     <p>${questions.question}</p>
@@ -86,6 +88,9 @@ var currentAnswers = `
 `
 optionsEl.innerHTML = currentAnswers
 }
+
+// Answers will be displayed in buttons to be clicked on
+// Correct answer will grant the user 25 points, and wrong answer will take off 10 seconds from the total time
 document.addEventListener("click", function(event){
     if (event.target.classList.contains("answerButton")){
         questions[currentIndex].clickedAnswer = event.target.textContent
@@ -114,7 +119,8 @@ function nextQuestion(){
     }
 }
 
-// Starting the quiz
+// Starting the quiz and timer
+startButton.addEventListener("click", startQuiz)
 function startQuiz() {
     startButton.style.display = "none";
     questionsEl.style.display = "block";
@@ -123,19 +129,23 @@ function startQuiz() {
     startTimer();
     startQuestions(questions[currentIndex]);
 }
+// Once quiz is done, show the last section with scores
 function gameOver(){
     questionsEl.style.display = "none";
     optionsEl.style.display = "none";
     scoreInputEl.style.display = "block";
+    endScreen.classList.remove("hide");
 }
 
+// Saving user initials and scores in local storage
 function save(){
-    var savedFromLocalStorage = JSON.parse(localStorage.getItem("saveFromLocalStorage")) || []
+    var savedFromLocalStorage = JSON.parse(localStorage.getItem("savedFromLocalStorage")) || []
     var initialsValue = initialsInput.value.trim()
     var userData = {
         initialsValue: initialsValue,
         finalScore: finalScore
     }
+    
     savedFromLocalStorage.push(userData)
     
         localStorage.setItem("savedFromLocalStorage", JSON.stringify(savedFromLocalStorage));
@@ -150,66 +160,29 @@ function save(){
         renderList();
 }
 
-
 submitButton.addEventListener("click", function(event){
     event.preventDefault()
     save()
-});
+})
 
+// Displaying a list with user initials and scores
 function renderList(){
-    // var inputs = JSON.parse(localStorage.getItem("userData"));
-    console.log("here")
     var userScores = JSON.parse(localStorage.getItem("savedFromLocalStorage")) || []
     for (var i = 0; i < userScores.length; i++){
         var scoreData = document.createElement("li")
-        scoreData.textContent = userScores[i].initialsValue + ":" + userScores[i].finalScore;
+        scoreData.textContent = userScores[i].initialsValue + ": " + userScores[i].finalScore;
         scoreListEl.append(scoreData) 
         scoreListEl.classList.remove("hide")
     }
-
 }
+// Go Back button so the user can go back to the begining of the quiz
+goBackButton.addEventListener("click", function(){
+    location.reload()
+})
 
-
-// create an event listener for submit button
-// in the function for the submit button create a variable that is an object
-// that object will have 2 properties - 1st is initials and the value of initials will be the value of the input.
-// the 2nd property will be the score and that value will be value of the final Score 
-// save it in local storage (before save it parse out what is in local storage, then add the object created above to the scores list, then save it to local storage)
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function showScores(){
-//     var score = 0;
-//     for (let i = 0; i < questions.length; i++) {
-//         if (userAnswers[i] === questions[i].answer) {
-//             score++;
-//         }
-//     }
-//     resultEl.style.display = "none";
-//     resultEl.textContent = `Your score is:${score}/${questions.length}`;
-
-//     resultEl.style.display = "block;"
-// }
-
-
-
-
-
-
-// Event listeners
-startButton.addEventListener("click", startQuiz)
-// submitButton.addEventListener("click", submitInitials)
-// goBackButton.addEventListener("click", goBack)
-// clearHighscoresButton.addEventListener("click", clearHighscores)
+// Clear Highscores button so the user can clear their initials and scores
+clearHighscoresButton.addEventListener("click", function(){
+    localStorage.clear()
+    scoreListEl.classList.add("hide")
+})
 

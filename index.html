@@ -12,7 +12,7 @@
         
     </header>
     <main>
-        <div id="highscore" class="highscore hide">View Highscores</div>
+        <!-- Starting page showing the title, timer, introduction to the quiz and start button -->
         <div id="timer">Time left: <span id="time">60 s</span></div>
         <div class="content">
         <h1>Coding Quiz Challenge</h1>
@@ -21,19 +21,24 @@
             <button id="startButton" class="button">Start Quiz</button>
         </div>
         
+        <!-- These are the questions and options of answers -->
         <div id="questions"></div>
         <div class="options"></div>
         <div id="correct"></div>
 
-        <div id="result hide">
-            <h2>All done!</h2>
+        <!-- Last section when the game is over, to show the final scores -->
+        <div id="result" class="end-screen hide">
+            <h2>Game Over!</h2>
             <p>Your final score is: <span id="score" class="finalScore">0</span></p>
+        
+        <!-- Option for the user to input their initials and save it with their scores -->
         <div id="score-input" style="display: none;">
             <input type="text" id="initials" placeholder="Enter your initials">
             <button id="submit">Submit</button>
         </div>
         <ul id="score-list" class="hide"></ul>
 
+        <!-- Ending quiz buttons with option to go back and clear scores -->
         <button id="goBack" class="button">Go back</button>
         <button id="clearHighscores" class="button">Clear Highscores</button>
         </div>
